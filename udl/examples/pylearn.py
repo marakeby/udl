@@ -1,5 +1,5 @@
 __author__ = 'haitham'
-from udl.pylearni.models.Autoencoder import Autoencoder
+from udl.pylearni.models.autoencoder import Autoencoder
 from udl.caffei.models.old.logistic import Logistic
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score
