@@ -10,8 +10,10 @@ class Layer(object):
         self._layer = pb2.LayerParameter()
         self._layer.name = name
 
+        
         self.layer_type = layer_type
-
+        if top == None:
+            top = name
         self.top = top
 
         self.bottom = bottom

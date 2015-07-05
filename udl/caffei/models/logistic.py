@@ -1,4 +1,5 @@
 import caffe
+import numpy as np
 from udl.caffei.datasets.DummyDataset import DummyDataset
 from udl.caffei.models.layers.innerproduct_pb2 import InnerProduct
 from udl.caffei.models.layers.layer import Phase
@@ -20,19 +21,16 @@ class Logistic(UDLModel):
         Y4D = get4D(Y)
         data_layer = self.dataset_adaptor.fit_transform(X4D,Y4D)
         net = self.get_net(data_layer)
-        self.solver = self.trainer.get_trainer(net)
-        self.solver.set_train_data (X4D, Y4D)
-        self.solver.solve()
-        return self.solver
-        
+        self.trainer.init_trainer(net,X4D, Y4D)
+        self.trainer.solve()
+        return self.trainer
 
-    def predict(self, X):
-        X4D = get4D(X)
-        self.solver.set_test_data (X4D)
-        self.solver.test_nets[0].forward()
-        prob = self.solver.test_nets[0].blobs['output'].data
+
+    def predict(self, x_test):
+        self.trainer.predict (x_test)
+        prob = self.trainer.solver.test_nets[0].blobs['output'].data
         print prob.shape
-        pred = prob[:, 0] < prob[:, 1]
+        pred = np.argmax(prob, axis=1)
         return pred
 
     def get_net(self, data_layer):
